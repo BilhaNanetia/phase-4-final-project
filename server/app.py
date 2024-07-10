@@ -13,7 +13,11 @@ migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
-from models import User, Recipe, Favorite, Comment
+from models import db, User, Recipe, Favorite, Comment  # Ensure models are imported after initializing db
+
+@app.route('/')
+def index():
+    return jsonify({"message": "Welcome to the Recipe Sharing API"}), 200
 
 # User Registration
 @app.route('/register', methods=['POST'])
@@ -140,7 +144,7 @@ def get_favorites():
 # Fetch Recipes from Public API
 @app.route('/external-recipes', methods=['GET'])
 def get_external_recipes():
-    response = requests.get('https://api.spoonacular.com/recipes/random?number=10&apiKey=YOUR_API_KEY')
+    response = requests.get(f'https://api.spoonacular.com/recipes/random?number=10&apiKey={app.config["SPOONACULAR_API_KEY"]}')
     if response.status_code != 200:
         return jsonify({'message': 'Failed to fetch recipes'}), 500
 
