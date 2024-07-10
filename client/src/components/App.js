@@ -10,6 +10,9 @@ import ExternalRecipes from './ExternalRecipes';
 import Favorites from './Favorites';
 import Search from './Search';
 import About from './About';
+import RecipeList from './RecipeList';
+import RecipeForm from './RecipeForm';
+
 
 const App = () => {
   return (
@@ -25,6 +28,8 @@ const App = () => {
         <Route path="/favorites" element={<Favorites />} />
         <Route path="/search" element={<Search />} />
         <Route path="/about" element={<About />} />
+        <Route path="/recipes" element={<RecipeList />} /> 
+        <Route path="/create-recipe" element={<RecipeForm />} /> 
       </Routes>
     </>
   );
