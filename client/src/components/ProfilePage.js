@@ -5,7 +5,7 @@ function Profile({ userId }) {
   const [errors, setErrors] = useState([]);
 
   useEffect(() => {
-    fetch(`/user/${userId}`).then((r) => {
+    fetch(`/profile/${userId}`).then((r) => {
       if (r.ok) {
         r.json().then((data) => setUser(data));
       } else {

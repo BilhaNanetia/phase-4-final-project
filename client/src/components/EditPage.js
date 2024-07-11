@@ -7,7 +7,7 @@ function EditProfile({ userId, onUpdate }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetch(`/user/${userId}`).then((r) => {
+    fetch(`/profile/${userId}`).then((r) => {
       if (r.ok) {
         r.json().then((user) => {
           setUsername(user.username);
@@ -23,7 +23,7 @@ function EditProfile({ userId, onUpdate }) {
     e.preventDefault();
     setErrors([]);
     setIsLoading(true);
-    fetch(`/user/${userId}`, {
+    fetch(`/profile/${userId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

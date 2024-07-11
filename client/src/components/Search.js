@@ -25,14 +25,15 @@ const Search = () => {
     try {
       const [flaskResponse, externalResponse] = await Promise.all([
         axios.get(`/recipes/search?q=${query}`),
-        axios.get(`https://api.spoonacular.com/recipes/complexSearch?query=${query}&apiKey=YOUR_SPOONACULAR_API_KEY`)
+        axios.get(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`)
       ]);
 
       const combinedResults = [
         ...flaskResponse.data,
-        ...externalResponse.data.results.map(recipe => ({
-          ...recipe, // Include all properties from external response
-          source: 'External' // Add a source property to differentiate
+        ...externalResponse.data.meals.map(meal => ({
+          id: meal.idMeal,
+          title: meal.strMeal,
+          source: 'TheMealDB'
         }))
       ];
 
@@ -68,7 +69,7 @@ const Search = () => {
       ) : results.length > 0 ? (
         <ul>
           {results.map(recipe => (
-            <li key={recipe.id || recipe.name}> // Use id or name for key
+            <li key={recipe.id || recipe.name}> {/* Use id or name for key */}
               <Link to={`/recipes/${recipe.id}`}>{recipe.title}</Link>
               {recipe.source && <span className="source">({recipe.source})</span>}
             </li>
