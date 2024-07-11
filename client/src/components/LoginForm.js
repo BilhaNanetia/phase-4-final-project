@@ -1,62 +1,78 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
 
-const Login = () => {
-  const [username, setUsername] = useState(''); // Add state variable for username
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+const Login = ({ onLogin }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    setError(null);
-
-    if (!username.trim() || !email.trim() || !password.trim()) {
-      setError('Please fill in all required fields.');
-      return;
-    }
-
-    try {
-      const response = await axios.post('/login', {
-        username, // Send username in the login request
-        email,
-        password
-      });
-
-      const accessToken = response.data.access_token;
-      localStorage.setItem('jwtToken', accessToken); // Assuming JWT storage in localStorage
-
-      navigate('/recipes'); // Redirect to recipes list after successful login
-    } catch (error) {
-      console.error('There was an error logging in!', error);
-      if (error.response && error.response.status === 401) {
-        setError('Invalid username, email, or password.'); // Update error message
+    setIsLoading(true);
+    fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username, password, email }),
+    }).then((r) => {
+      setIsLoading(false);
+      if (r.ok) {
+        r.json().then((user) => onLogin(user));
       } else {
-        setError('An error occurred. Please try again later.');
+        r.json().then((err) => setErrors(err.errors));
       }
-    }
-  };
+    });
+  }
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
-        <input type="text" id="username" value={username} onChange={e => setUsername(e.target.value)} required />
+    <>
+      <div>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            autoComplete="off"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
 
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" value={email} onChange={e => setEmail(e.target.value)} required />
+          <label htmlFor="email">Email:</label>
+          <input
+            type="text"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
 
-        <label htmlFor="password">Password:</label>
-        <input type="password" id="password" value={password} onChange={e => setPassword(e.target.value)} required />
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            autoComplete="current-password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button variant="fill" color="primary" type="submit">
+            {isLoading ? "Loading..." : "Login"}
+          </button>
+        </form>
+        {errors.length > 0 && (
+          <div className="error-messages">
+            <p>Errors:</p>
+            <ul>
+              {errors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-        <button type="submit">Login</button>
-      </form>
-      {error && <p className="error-message">{error}</p>}
-    </div>
+        {isLoading && <p>Loading...</p>}
+      </div>
+    </>
   );
 };
-
 export default Login;
