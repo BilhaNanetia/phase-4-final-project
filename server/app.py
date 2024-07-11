@@ -3,12 +3,14 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+from flask_cors import CORS
 import requests
 from config import Config
-from models import db, User, Recipe, Favorite, Comment
+from models import db, User, Recipe, Comment
 
 app = Flask(__name__)
 app.config.from_object(Config)
+CORS(app) 
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -199,29 +201,22 @@ def delete_recipe(recipe_id):
     db.session.delete(recipe)
     db.session.commit()
     return jsonify({'message': 'Recipe deleted successfully'}), 200
+# Search Recipes
+@app.route('/recipes/search', methods=['GET'])
+def search_recipes():
+    q = request.args.get('q')
+    if not q:
+        return jsonify({'message': 'Search query is required'}), 400
 
-# Add Recipe to Favorites
-@app.route('/favorites', methods=['POST'])
-@jwt_required()
-def add_favorite():
-    data = request.get_json()
-    current_user = get_jwt_identity()
+    recipes = Recipe.query.filter(
+        (Recipe.title.ilike(f'%{q}%')) |
+        (Recipe.description.ilike(f'%{q}%')) |
+        (Recipe.ingredients.ilike(f'%{q}%')) |
+        (Recipe.instructions.ilike(f'%{q}%'))
+    ).all()
 
-    favorite = Favorite(user_id=current_user['id'], recipe_id=data['recipe_id'])
-    db.session.add(favorite)
-    db.session.commit()
-
-    return jsonify({'message': 'Recipe added to favorites'}), 201
-
-# Get User's Favorites
-@app.route('/favorites', methods=['GET'])
-@jwt_required()
-def get_favorites():
-    current_user = get_jwt_identity()
-    favorites = Favorite.query.filter_by(user_id=current_user['id']).all()
     output = []
-    for favorite in favorites:
-        recipe = Recipe.query.get(favorite.recipe_id)
+    for recipe in recipes:
         recipe_data = {
             'id': recipe.id,
             'title': recipe.title,
@@ -233,6 +228,7 @@ def get_favorites():
         output.append(recipe_data)
 
     return jsonify(output), 200
+
 
 # Fetch Recipes from Public API
 @app.route('/external-recipes', methods=['GET'])
