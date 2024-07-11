@@ -24,11 +24,10 @@ This is a full-stack web application designed to facilitate users in sharing, di
 git clone https://github.com/BilhaNanetia/phase-4-final-project.git
 cd phase-4-final-project
 ```
-- Install the dependencies for the frontend and backend:
+- Install the dependencies for the  backend:
 ```console
 pipenv install
 pipenv shell
-npm install --prefix client
 ```
 - Change into the server directory:
 ```console
@@ -56,8 +55,9 @@ python app.py
 - Run the React app in another terminal:
 ```console
 cd client
+npm install
 npm install react-icons
-npm start --prefix client
+npm start 
 ```
 ## Usage
 - In the web browser, start by creating an account by signing in
@@ -98,3 +98,4 @@ This project was a collaborative effort by the following individuals:
 - Audrey-cKH(Gitub username)
 - Munyat(Gitub username)
 - BilRos(Gitub username)
+- BilhaNanetia(Gitub username)
