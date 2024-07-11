@@ -4,20 +4,17 @@ from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import requests
+from config import Config
+from models import db, User, Recipe, Favorite, Comment
 
 app = Flask(__name__)
-app.config.from_object('config.Config')
+app.config.from_object(Config)
 
-db = SQLAlchemy(app)
+db.init_app(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
-from models import db, User, Recipe, Favorite, Comment  # Ensure models are imported after initializing db
-
-@app.route('/')
-def index():
-    return jsonify({"message": "Welcome to the Recipe Sharing API"}), 200
 
 # User Registration
 @app.route('/register', methods=['POST'])
@@ -144,7 +141,7 @@ def get_favorites():
 # Fetch Recipes from Public API
 @app.route('/external-recipes', methods=['GET'])
 def get_external_recipes():
-    response = requests.get(f'https://api.spoonacular.com/recipes/random?number=10&apiKey={app.config["SPOONACULAR_API_KEY"]}')
+    response = requests.get('https://www.themealdb.com/api/json/v1/1/random.php?api_key={app.config["THEMEALDB_API_KEY"]}')
     if response.status_code != 200:
         return jsonify({'message': 'Failed to fetch recipes'}), 500
 
@@ -184,4 +181,4 @@ def get_comments(recipe_id):
     return jsonify(output), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5555, debug=True)

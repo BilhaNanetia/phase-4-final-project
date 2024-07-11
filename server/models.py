@@ -1,10 +1,16 @@
 from datetime import datetime
+from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy_serializer import SerializerMixin
 
 db = SQLAlchemy()
 
-class User(db.Model):
+class User(db.Model, SerializerMixin):
+    __tablename__ = 'user'
+    serialize_rules = ('-password_hash', '-recipes', '-favorites', '-comments')
+
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -19,7 +25,10 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-class Recipe(db.Model):
+class Recipe(db.Model, SerializerMixin):
+    __tablename__ = 'recipe'
+    serialize_rules = ('-user', '-comments')
+
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
@@ -29,14 +38,23 @@ class Recipe(db.Model):
     instructions = db.Column(db.Text, nullable=False)
     comments = db.relationship('Comment', backref='recipe', lazy=True)
 
-class Favorite(db.Model):
+
+class Favorite(db.Model, SerializerMixin):
+    __tablename__ = 'favorite'
+    serialize_rules = ('-user', '-recipe')
+    
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
+    
 
-class Comment(db.Model):
+class Comment(db.Model, SerializerMixin):
+    __tablename__ = 'comment'
+    serialize_rules = ('-user', '-recipe')
+
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
+    
