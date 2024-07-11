@@ -1,4 +1,3 @@
-
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -49,6 +48,24 @@ def login():
     access_token = create_access_token(identity={'id': user.id, 'username': user.username})
     return jsonify(access_token=access_token), 200
 
+# Get User Profile
+@app.route('/profile', methods=['GET'])
+@jwt_required()
+def get_profile():
+    current_user = get_jwt_identity()
+    user = User.query.get(current_user['id'])
+
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    user_data = {
+        'id': user.id,
+        'username': user.username,
+        'email': user.email
+    }
+
+    return jsonify(user_data), 200
+
 # Update User Profile
 @app.route('/profile', methods=['PUT'])
 @jwt_required()
@@ -56,6 +73,9 @@ def update_profile():
     data = request.get_json()
     current_user = get_jwt_identity()
     user = User.query.get(current_user['id'])
+
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
 
     if 'username' in data:
         user.username = data['username']
@@ -66,6 +86,20 @@ def update_profile():
 
     db.session.commit()
     return jsonify({'message': 'Profile updated successfully'}), 200
+
+# Delete User Profile
+@app.route('/profile', methods=['DELETE'])
+@jwt_required()
+def delete_profile():
+    current_user = get_jwt_identity()
+    user = User.query.get(current_user['id'])
+
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
+
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'message': 'User deleted successfully'}), 200
 
 # Create Recipe
 @app.route('/recipes', methods=['POST'])
@@ -105,6 +139,67 @@ def get_recipes():
 
     return jsonify(output), 200
 
+# Get Single Recipe
+@app.route('/recipes/<int:recipe_id>', methods=['GET'])
+def get_recipe(recipe_id):
+    recipe = Recipe.query.get(recipe_id)
+    if not recipe:
+        return jsonify({'message': 'Recipe not found'}), 404
+
+    recipe_data = {
+        'id': recipe.id,
+        'title': recipe.title,
+        'description': recipe.description,
+        'ingredients': recipe.ingredients,
+        'instructions': recipe.instructions,
+        'author': recipe.author.username
+    }
+
+    return jsonify(recipe_data), 200
+
+# Update Recipe
+@app.route('/recipes/<int:recipe_id>', methods=['PUT'])
+@jwt_required()
+def update_recipe(recipe_id):
+    data = request.get_json()
+    current_user = get_jwt_identity()
+    recipe = Recipe.query.get(recipe_id)
+
+    if not recipe:
+        return jsonify({'message': 'Recipe not found'}), 404
+
+    if recipe.user_id != current_user['id']:
+        return jsonify({'message': 'Permission denied'}), 403
+
+    if 'title' in data:
+        recipe.title = data['title']
+    if 'description' in data:
+        recipe.description = data['description']
+    if 'ingredients' in data:
+        recipe.ingredients = data['ingredients']
+    if 'instructions' in data:
+        recipe.instructions = data['instructions']
+
+    db.session.commit()
+    return jsonify({'message': 'Recipe updated successfully'}), 200
+
+# Delete Recipe
+@app.route('/recipes/<int:recipe_id>', methods=['DELETE'])
+@jwt_required()
+def delete_recipe(recipe_id):
+    current_user = get_jwt_identity()
+    recipe = Recipe.query.get(recipe_id)
+
+    if not recipe:
+        return jsonify({'message': 'Recipe not found'}), 404
+
+    if recipe.user_id != current_user['id']:
+        return jsonify({'message': 'Permission denied'}), 403
+
+    db.session.delete(recipe)
+    db.session.commit()
+    return jsonify({'message': 'Recipe deleted successfully'}), 200
+
 # Add Recipe to Favorites
 @app.route('/favorites', methods=['POST'])
 @jwt_required()
@@ -142,7 +237,7 @@ def get_favorites():
 # Fetch Recipes from Public API
 @app.route('/external-recipes', methods=['GET'])
 def get_external_recipes():
-    response = requests.get('https://www.themealdb.com/api/json/v1/1/random.php?api_key={app.config["THEMEALDB_API_KEY"]}')
+    response = requests.get(f'https://www.themealdb.com/api/json/v1/1/random.php?api_key={app.config["THEMEALDB_API_KEY"]}')
     if response.status_code != 200:
         return jsonify({'message': 'Failed to fetch recipes'}), 500
 
@@ -183,4 +278,3 @@ def get_comments(recipe_id):
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
-

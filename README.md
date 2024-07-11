@@ -34,9 +34,10 @@ npm install --prefix client
 ```console
 cd server
 ```
-- Configure the FLASK_APP environment variable
+- Configure the FLASK_APP environment variables
 ```console
 export FLASK_APP=app.py
+export FLASK_RUN_PORT=5555
 ```
 - Set up the database:
 ```console
@@ -55,6 +56,7 @@ python app.py
 - Run the React app in another terminal:
 ```console
 cd client
+npm install react-icons
 npm start --prefix client
 ```
 ## Usage
@@ -67,19 +69,23 @@ npm start --prefix client
 - Recipes
     - GET /recipes: Retrieve all recipes
     - POST /recipes: Create a new recipe
-- User Authentication
+    - GET /recipes/{id}: Retrieve a recipe
+    - PUT /recipes/{id}: Update a recipe
+    - DELETE /recipes/{id}: Delete a recipe
+- Users
     - POST /register: Create a new user
+    - DELETE /profile: Delete user's profile
     - POST /login: Log in
-- User Profile
+    - GET /profile: View user's profile
     - PUT /profile: Update user profile
 - Favorites
     - GET /favorites: Retrieve all favorites for a user
     - POST /favorites: Create a new favorite
-- External Recipes
-    - GET /external-recipes: Retrieve  external recipes
 - Comments
     - POST /recipes/{id}/comments: Add comment to a recipe
     - GET /recipes/{id}/comments: Get comments for a recipe
+- External Recipes
+    - GET /external-recipes: Retrieve  external recipes
 ## Contributing
 - Fork the repository
 - Create your feature branch
@@ -91,4 +97,4 @@ This project was a collaborative effort by the following individuals:
 - AmariahAK(Gitub username)
 - Audrey-cKH(Gitub username)
 - Munyat(Gitub username)
-- Billy
+- BilRos(Gitub username)

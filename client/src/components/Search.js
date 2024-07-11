@@ -69,7 +69,7 @@ const Search = () => {
       ) : results.length > 0 ? (
         <ul>
           {results.map(recipe => (
-            <li key={recipe.id || recipe.name}> {/* Use id or name for key */}
+            <li key={recipe.id || recipe.name}> 
               <Link to={`/recipes/${recipe.id}`}>{recipe.title}</Link>
               {recipe.source && <span className="source">({recipe.source})</span>}
             </li>
