@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -7,6 +7,7 @@ const Search = () => {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [searchAttempted, setSearchAttempted] = useState(false);
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
@@ -16,21 +17,27 @@ const Search = () => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+    setSearchAttempted(true);
+    setResults([]);  // Clear previous results
 
     if (!query.trim()) {
       setIsLoading(false);
-      return; // Handle empty search term
+      setError('Please enter a search term');
+      return;
     }
 
     try {
-      const [flaskResponse, externalResponse] = await Promise.all([
-        axios.get(`/recipes/search?q=${query}`),
-        axios.get(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`)
-      ]);
+      // Local API call
+      const localResponse = await axios.get(`/recipes/search?q=${query}`);
+      const localResults = localResponse.data;
+
+      // External API call (consider proxying this through your backend)
+      const externalResponse = await axios.get(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`);
+      const externalResults = externalResponse.data.meals || [];
 
       const combinedResults = [
-        ...flaskResponse.data,
-        ...externalResponse.data.meals.map(meal => ({
+        ...localResults,
+        ...externalResults.map(meal => ({
           id: meal.idMeal,
           title: meal.strMeal,
           source: 'TheMealDB'
@@ -46,11 +53,6 @@ const Search = () => {
     }
   };
 
-  useEffect(() => {
-    // Clear results when query changes
-    setResults([]);
-  }, [query]);
-
   return (
     <div>
       <h1>Search Recipes</h1>
@@ -64,19 +66,20 @@ const Search = () => {
         </button>
       </form>
       {error && <p className="error-message">{error}</p>}
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : results.length > 0 ? (
-        <ul>
-          {results.map(recipe => (
-            <li key={recipe.id || recipe.name}> 
-              <Link to={`/recipes/${recipe.id}`}>{recipe.title}</Link>
-              {recipe.source && <span className="source">({recipe.source})</span>}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No recipes found.</p>
+      {isLoading && <p>Loading...</p>}
+      {!isLoading && searchAttempted && (
+        results.length > 0 ? (
+          <ul>
+            {results.map(recipe => (
+              <li key={recipe.id || recipe.title}>
+                <Link to={`/recipes/${recipe.id}`}>{recipe.title}</Link>
+                {recipe.source && <span className="source"> ({recipe.source})</span>}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No recipes found.</p>
+        )
       )}
     </div>
   );

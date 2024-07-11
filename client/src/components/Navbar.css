@@ -1,76 +1,80 @@
 .header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: #eff8f0; /* or any color you prefer */
+  align-items: center;
+  z-index: var(--z-fixed);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* optional: adds a subtle shadow */
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  padding: 0 1rem;
+}
+
+.nav__logo {
+  color: var(--first-color);
+  transition: color 0.4s;
+  font-size: var(--h2-font-size);
+  font-family: var(--second-font);
+}
+
+.nav__toggle,
+.nav__close {
+  display: none; /* Hide these for now, we'll use them for mobile later */
+}
+
+.nav__list {
+  display: flex;
+  flex-direction: row; /* Change to row for horizontal alignment */
+  align-items: center;
+  gap: 1.5rem; /* Space between nav items */
+}
+
+.nav__link {
+  color: var(--title-color);
+  font-weight: var(--font-semi-bold);
+  transition: color 0.4s;
+}
+
+.nav__link:hover {
+  color: var(--first-color);
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+  .nav__menu {
     position: fixed;
-    width: 100%;
     top: 0;
-    left: 0;
-    background-color: transparent;
-    z-index: var(--z-fixed);
-    }
-    .nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    height: var(--header-height);
-    margin: 1rem;
-    }
-    .nav__logo {
-    color: var(--first-color);
-    transition: color 0.4s;
-    font-size: var(--h2-font-size);
-    font-family: var(--second-font);
-    }
-    .nav__toggle,
-    .nav__close {
-    font-size: 1.5rem;
-    color: var(--title-color);
-    cursor: pointer;
-    }
-    .nav__cta {
-    background-color: var(--first-color);
-    color: var(--title-color);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    padding: 0.75rem 1.5rem;
-    }
-    .nav__list {
-    display: flex;
+    right: -100%;
+    width: 70%;
+    height: 100%;
+    padding: 3rem;
+    background-color: var(--container-color);
+    transition: right 0.4s;
+  }
+
+  .nav__list {
     flex-direction: column;
-    row-gap: 2.5rem;
-    }
-    .nav__link {
-    color: var(--title-color);
-    font-weight: var(--font-semi-bold);
-    transition: color 0.4s;
-    }
-    .nav__link:hover {
-    color: var(--first-color);
-    }
-    .nav__close {
+  }
+
+  .nav__close {
     position: absolute;
     top: 1rem;
     right: 1.5rem;
-    }
-    .show-menu {
+  }
+
+  .show-menu {
     right: 0;
-    
-    }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+  }
+
+  .nav__toggle,
+  .nav__close {
+    display: block;
+  }
+}

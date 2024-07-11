@@ -1,6 +1,6 @@
 # YUM KINGDOM
 ## Description
-This is a full-stack web application designed to facilitate users in sharing, discovering, and managing recipes. It provides a seamless interface for users to register, log in, create and browse recipes, add favorites, and leave comments. Additionally, it integrates with an external API to fetch and display recipes, enriching the user’s experience with a diverse range of culinary options. The application is built with a Flask API backend and a responsive React frontend, providing a robust,smooth and interactive experience for cooking enthusiasts.
+This is a full-stack web application designed to facilitate users in sharing, discovering, and managing recipes. It provides a seamless interface for users to register, log in, create, browse recipes,  and leave comments. Additionally, it integrates with an external API to fetch and display recipes, enriching the user’s experience with a diverse range of culinary options. The application is built with a Flask API backend and a responsive React frontend, providing a robust,smooth and interactive experience for cooking enthusiasts.
 ## Features
 - User registration and login with JWT authentication.
 - Logged in users can create and share their own recipes.
