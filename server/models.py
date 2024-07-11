@@ -1,3 +1,4 @@
+
 from datetime import datetime
 from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
@@ -57,4 +58,4 @@ class Comment(db.Model, SerializerMixin):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
-    
+   
