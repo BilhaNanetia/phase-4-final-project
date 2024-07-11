@@ -276,5 +276,19 @@ def get_comments(recipe_id):
 
     return jsonify(output), 200
 
+# Check if User is Authenticated
+@app.route('/checksession', methods=['GET'])
+@jwt_required()
+def check_session():
+    current_user = get_jwt_identity()
+    if not current_user:
+        return jsonify({'message': 'No active session'}), 401
+
+    return jsonify({
+        'id': current_user['id'],
+        'username': current_user['username']
+    }), 200
+
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
