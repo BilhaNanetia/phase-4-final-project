@@ -21,10 +21,18 @@ jwt = JWTManager(app)
 # User Registration
 @app.route('/register', methods=['POST'])
 def register():
-    data = request.get_json()
-    username = data['username']
-    email = data['email']
-    password = data['password']
+    if request.is_json:
+        data = request.get_json()
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+    else:
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+    if not username or not email or not password:
+        return jsonify({'message': 'Missing required fields'}), 400
 
     if User.query.filter_by(email=email).first():
         return jsonify({'message': 'Email already exists'}), 400
@@ -39,9 +47,16 @@ def register():
 # User Login
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    email = data['email']
-    password = data['password']
+    if request.is_json:
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+    else:
+        email = request.form.get('email')
+        password = request.form.get('password')
+
+    if not email or not password:
+        return jsonify({'message': 'Missing required fields'}), 400
 
     user = User.query.filter_by(email=email).first()
     if user is None or not user.check_password(password):
@@ -271,6 +286,20 @@ def get_comments(recipe_id):
         output.append(comment_data)
 
     return jsonify(output), 200
+
+# Check if User is Authenticated
+@app.route('/checksession', methods=['GET'])
+@jwt_required()
+def check_session():
+    current_user = get_jwt_identity()
+    if not current_user:
+        return jsonify({'message': 'No active session'}), 401
+
+    return jsonify({
+        'id': current_user['id'],
+        'username': current_user['username']
+    }), 200
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
