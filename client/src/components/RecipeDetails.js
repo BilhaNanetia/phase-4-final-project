@@ -1,4 +1,3 @@
-import React from 'react';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -22,11 +21,10 @@ const RecipeDetails = () => {
     return <div>Loading...</div>;
   }
 
-const RecipeDetails = ({ recipe, onClose }) => {
+
   return (
     <div className="recipe-details-overlay">
       <div className="recipe-details-modal">
-        <span className="close-btn" onClick={onClose}>&times;</span>
         <h2>{recipe.strMeal}</h2>
         <img src={recipe.strMealThumb} alt={recipe.strMeal} />
         <div className="recipe-info">
@@ -49,6 +47,7 @@ const RecipeDetails = ({ recipe, onClose }) => {
       <p>{recipe.instructions}</p>
       <Comments recipeId={id} />
     </div>
+  </div>
   );
 };
 
