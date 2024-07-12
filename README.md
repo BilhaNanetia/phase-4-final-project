@@ -56,7 +56,6 @@ python app.py
 ```console
 cd client
 npm install
-npm install react-icons
 npm start 
 ```
 ## Usage
