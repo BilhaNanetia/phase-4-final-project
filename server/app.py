@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
@@ -16,7 +16,6 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 
-# User Registration
 @app.route('/register', methods=['POST'])
 def register():
     if request.is_json:
@@ -40,9 +39,11 @@ def register():
     db.session.add(user)
     db.session.commit()
 
-    return jsonify({'message': 'User created successfully'}), 201
+    access_token = create_access_token(identity={'id': user.id, 'username': user.username})
 
-# User Login
+    return jsonify(access_token=access_token, user={'id': user.id, 'username': user.username}), 201
+
+
 @app.route('/login', methods=['POST'])
 def login():
     if request.is_json:
@@ -61,7 +62,8 @@ def login():
         return jsonify({'message': 'Invalid credentials'}), 401
 
     access_token = create_access_token(identity={'id': user.id, 'username': user.username})
-    return jsonify(access_token=access_token), 200
+    return jsonify(access_token=access_token, user={'id': user.id, 'username': user.username}), 200
+
 
 # Get User Profile
 @app.route('/profile', methods=['GET'])
@@ -79,7 +81,7 @@ def get_profile():
         'email': user.email
     }
 
-    return jsonify(user_data), 200
+    return make_response(jsonify(user_data), 200)
 
 # Update User Profile
 @app.route('/profile', methods=['PUT'])
@@ -291,18 +293,23 @@ def get_comments(recipe_id):
 
     return jsonify(output), 200
 
-# Check if User is Authenticated
 @app.route('/checksession', methods=['GET'])
 @jwt_required()
 def check_session():
-    current_user = get_jwt_identity()
-    if not current_user:
-        return jsonify({'message': 'No active session'}), 401
+    try:
+        current_user = get_jwt_identity()
+        app.logger.info(f'Current User: {current_user}')
+        if not current_user:
+            return jsonify({'message': 'No active session'}), 401
 
-    return jsonify({
-        'id': current_user['id'],
-        'username': current_user['username']
-    }), 200
+        return make_response(jsonify({
+            'id': current_user['id'],
+            'username': current_user['username']
+        }), 200)
+    except Exception as e:
+        app.logger.error(f'Error: {e}')
+        return jsonify({'message': 'Error processing request'}), 500
+
 
 
 if __name__ == '__main__':

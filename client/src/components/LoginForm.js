@@ -7,24 +7,24 @@ const Login = ({ onLogin }) => {
   const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    fetch("/login", {
+    const response = await fetch("/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ username, password, email }),
-    }).then((r) => {
-      setIsLoading(false);
-      if (r.ok) {
-        r.json().then((user) => onLogin(user));
-      } else {
-        r.json().then((err) => setErrors(err.errors));
-      }
+      body: JSON.stringify({ username, email, password }),
     });
-  }
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data); // Log the response data
+      localStorage.setItem("token", data.access_token);
+      onLogin(data.user); // assuming the response contains the user data
+    } else {
+      console.error("Login failed");
+    }
+  };
 
   return (
     <>
@@ -34,7 +34,7 @@ const Login = ({ onLogin }) => {
           <input
             type="text"
             id="username"
-            autoComplete="off"
+            autoComplete="on"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />

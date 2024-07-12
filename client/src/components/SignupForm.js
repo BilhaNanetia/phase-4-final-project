@@ -2,100 +2,53 @@ import React, { useState } from "react";
 
 const Signup = ({ onLogin }) => {
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [email, setEmail] = useState("");
-  const [errors, setErrors] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [password, setPassword] = useState("");
 
-  function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors([]);
-    setIsLoading(true);
-
-    fetch("/register", {
+    const response = await fetch("/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-        email: email,
-      }),
-    })
-      .then((r) => {
-        setIsLoading(false);
-        if (r.ok) {
-          r.json().then((user) => onLogin(user));
-        } else {
-          r.json().then((err) => setErrors(err.errors));
-        }
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        console.error("Error:", error);
-        setErrors(["An error occurred. Please try again later."]);
-      });
-  }
+      body: JSON.stringify({ username, email, password }),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      console.log(data); // Log the response data
+      localStorage.setItem("token", data.access_token);
+      onLogin(data.user); // assuming the response contains the user data
+    } else {
+      console.error("Signup failed");
+    }
+  };
 
   return (
-    <div>
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
-
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        <label htmlFor="passwordConfirmation">Confirm Password:</label>
-        <input
-          type="password"
-          id="passwordConfirmation"
-          value={passwordConfirmation}
-          onChange={(e) => setPasswordConfirmation(e.target.value)}
-          required
-        />
-
-        <label htmlFor="email">Email:</label>
-        <input
-          type="text"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <button type="submit" disabled={isLoading}>
-          Sign Up
-        </button>
-      </form>
-
-      {errors.length > 0 && (
-        <div className="error-messages">
-          <p>Errors:</p>
-          <ul>
-            {errors.map((error, index) => (
-              <li key={index}>{error}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {isLoading && <p>Loading...</p>}
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
+      />
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+      />
+      <button type="submit">Sign Up</button>
+    </form>
   );
 };
 
