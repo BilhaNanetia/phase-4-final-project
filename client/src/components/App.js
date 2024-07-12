@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './Navbar';
 import Home from './Home';
-import ProfilePage from './ProfilePage';
+import ProfilePage from './Profile';
 import SignupForm from './SignupForm';
 import LoginForm from './LoginForm';
 import RecipeDetails from './RecipeDetails';
