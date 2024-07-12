@@ -21,9 +21,9 @@ const Login = ({ onLogin }) => {
       .then((r) => {
         setIsLoading(false);
         if (r.ok) {
-          return r.json().then((user) => onLogin(user));
+          r.json().then((user) => onLogin(user));
         } else {
-          return r.json().then((err) => setErrors(err.errors));
+          r.json().then((err) => setErrors(err.errors || ["Login failed"]));
         }
       })
       .catch((error) => {
@@ -38,7 +38,7 @@ const Login = ({ onLogin }) => {
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">Email:</label>
         <input
-          type="text"
+          type="email"
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -54,7 +54,7 @@ const Login = ({ onLogin }) => {
           required
         />
 
-        <button variant="fill" color="primary" type="submit" disabled={isLoading}>
+        <button type="submit" disabled={isLoading}>
           {isLoading ? "Loading..." : "Login"}
         </button>
       </form>
@@ -68,8 +68,6 @@ const Login = ({ onLogin }) => {
           </ul>
         </div>
       )}
-
-      {isLoading && <p>Loading...</p>}
     </div>
   );
 };
