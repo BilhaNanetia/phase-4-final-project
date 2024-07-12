@@ -36,17 +36,29 @@ def register():
         password = request.form.get('password')
 
     if not username or not email or not password:
-        return jsonify({'message': 'Missing required fields'}), 400
+        app.logger.error('Missing required fields')
+        return jsonify({'errors': ['Missing required fields']}), 400
+
+    if User.query.filter_by(username=username).first():
+        app.logger.error('Username already exists')
+        return jsonify({'errors': ['Username already exists']}), 400
 
     if User.query.filter_by(email=email).first():
-        return jsonify({'message': 'Email already exists'}), 400
+        app.logger.error('Email already exists')
+        return jsonify({'errors': ['Email already exists']}), 400
 
-    user = User(username=username, email=email)
-    user.set_password(password)
-    db.session.add(user)
-    db.session.commit()
+    try:
+        user = User(username=username, email=email)
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+    except Exception as e:
+        app.logger.error(f'Error creating user: {e}')
+        return jsonify({'errors': ['Error creating user']}), 500
 
     return jsonify({'message': 'User created successfully'}), 201
+
+
 
 # User Login
 @app.route('/login', methods=['POST'])
@@ -60,11 +72,13 @@ def login():
         password = request.form.get('password')
 
     if not email or not password:
-        return jsonify({'message': 'Missing required fields'}), 400
+        app.logger.error('Missing required fields')
+        return jsonify({'errors': ['Missing required fields']}), 400
 
     user = User.query.filter_by(email=email).first()
     if user is None or not user.check_password(password):
-        return jsonify({'message': 'Invalid credentials'}), 401
+        app.logger.error('Invalid credentials')
+        return jsonify({'errors': ['Invalid credentials']}), 401
 
     access_token = create_access_token(identity={'id': user.id, 'username': user.username})
     return jsonify(access_token=access_token), 200
@@ -130,25 +144,30 @@ def delete_profile():
     db.session.commit()
     return jsonify({'message': 'User deleted successfully'}), 200
 
-# Create Recipe
+# # Create Recipe
 @app.route('/recipes', methods=['POST'])
 @jwt_required()
 def create_recipe():
     data = request.get_json()
     current_user = get_jwt_identity()
 
-    recipe = Recipe(
-        title=data['title'],
-        description=data['description'],
-        ingredients=data['ingredients'],
-        instructions=data['instructions'],
-        user_id=current_user['id']
-    )
+    try:
+        recipe = Recipe(
+            title=data['title'],
+            description=data['description'],
+            ingredients=data['ingredients'],
+            instructions=data['instructions'],
+            user_id=current_user['id']
+        )
 
-    db.session.add(recipe)
-    db.session.commit()
+        db.session.add(recipe)
+        db.session.commit()
 
-    return jsonify({'message': 'Recipe created successfully'}), 201
+        return jsonify({'message': 'Recipe created successfully', 'recipe': recipe.serialize()}), 201
+    except KeyError:
+        return jsonify({'error': 'Missing required fields'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Get All Recipes
 @app.route('/recipes', methods=['GET'])

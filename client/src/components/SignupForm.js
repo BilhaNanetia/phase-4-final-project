@@ -8,9 +8,15 @@ const Signup = ({ onLogin }) => {
   const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  function handleSubmit(e) {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setErrors([]);
+
+    if (password !== passwordConfirmation) {
+      setErrors(["Passwords do not match"]);
+      return;
+    }
+
     setIsLoading(true);
 
     fetch("/register", {
@@ -29,7 +35,7 @@ const Signup = ({ onLogin }) => {
         if (r.ok) {
           r.json().then((user) => onLogin(user));
         } else {
-          r.json().then((err) => setErrors(err.errors));
+          r.json().then((err) => setErrors(err.errors || ["Registration failed"]));
         }
       })
       .catch((error) => {
@@ -37,7 +43,7 @@ const Signup = ({ onLogin }) => {
         console.error("Error:", error);
         setErrors(["An error occurred. Please try again later."]);
       });
-  }
+  };
 
   return (
     <div>
@@ -72,14 +78,15 @@ const Signup = ({ onLogin }) => {
 
         <label htmlFor="email">Email:</label>
         <input
-          type="text"
+          type="email"
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <button type="submit" disabled={isLoading}>
-          Sign Up
+          {isLoading ? 'Signing Up...' : 'Sign Up'}
         </button>
       </form>
 
@@ -93,8 +100,6 @@ const Signup = ({ onLogin }) => {
           </ul>
         </div>
       )}
-
-      {isLoading && <p>Loading...</p>}
     </div>
   );
 };

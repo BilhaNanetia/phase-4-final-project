@@ -29,16 +29,21 @@ const RecipeList = () => {
     setShowForm(!showForm);
   };
 
+  const handleRecipeSubmit = (newRecipe) => {
+    setRecipes((prevRecipes) => [...prevRecipes, newRecipe]);
+    setShowForm(false);
+  };
+
   return (
     <div className="recipe-list">
       <button className="toggle-form-button" onClick={toggleForm}>
         {showForm ? "Hide Recipe Form" : "Add New Recipe"}
       </button>
-      {showForm && <RecipeForm />}
+      {showForm && <RecipeForm onRecipeSubmit={handleRecipeSubmit} />}
       {recipes.map((recipe) => (
-        <div key={recipe.idMeal} className="recipe-card" onClick={() => handleRecipeClick(recipe)}>
-          <img src={recipe.strMealThumb} alt={recipe.strMeal} className="recipe-image" />
-          <h3 className="recipe-title">{recipe.strMeal}</h3>
+        <div key={recipe.idMeal || recipe.id} className="recipe-card" onClick={() => handleRecipeClick(recipe)}>
+          <img src={recipe.strMealThumb || "default_image_url"} alt={recipe.strMeal || recipe.title} className="recipe-image" />
+          <h3 className="recipe-title">{recipe.strMeal || recipe.title}</h3>
           {selectedRecipe === recipe && (
             <div className="recipe-details">
               <h4>Ingredients</h4>
@@ -50,7 +55,7 @@ const RecipeList = () => {
                   ))}
               </ul>
               <h4>Instructions</h4>
-              <p>{recipe.strInstructions}</p>
+              <p>{recipe.strInstructions || recipe.instructions}</p>
             </div>
           )}
         </div>
