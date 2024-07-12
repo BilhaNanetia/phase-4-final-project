@@ -13,7 +13,7 @@ import RecipeList from "./RecipeList";
 import RecipeForm from "./RecipeForm";
 import Login from "../pages/Login";
 import Profile from "./Profile";
-origin/profile_pages
+
 const App = () => {
   const [user, setUser] = useState(null);
   useEffect(() => {
@@ -41,6 +41,7 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/recipes" element={<RecipeList />} />
         <Route path="/create-recipe" element={<RecipeForm />} />
+        <Route path="/Profile" element={<ProfilePage/>} />
       </Routes> }
     </>
   );

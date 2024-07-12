@@ -4,8 +4,7 @@ This is a full-stack web application designed to facilitate users in sharing, di
 ## Features
 - User registration and login with JWT authentication.
 - Logged in users can create and share their own recipes.
-- Logged in users can search and browse recipes from both local database and external API
-- Logged in users can save their favorite recipes
+- Logged in users can search and browse recipes from an external API
 - Logged in users can click on a recipe to view detailed information, including ingredients, instructions, and author details.
 - Logged in users can view a list of all recipes.
 - Logged in users can comment on recipes.
@@ -61,7 +60,6 @@ npm start
 ## Usage
 - In the web browser, start by creating an account by signing in
 - Browse recipes, create new ones or  search for recipes 
-- Save your favorite recipes
 - Comment on other recipes and view other people's comments on different recipes
 - Manage your profile
 ## API Endpoints
@@ -77,9 +75,6 @@ npm start
     - POST /login: Log in
     - GET /profile: View user's profile
     - PUT /profile: Update user profile
-- Favorites
-    - GET /favorites: Retrieve all favorites for a user
-    - POST /favorites: Create a new favorite
 - Comments
     - POST /recipes/{id}/comments: Add comment to a recipe
     - GET /recipes/{id}/comments: Get comments for a recipe
@@ -93,8 +88,8 @@ npm start
 - Open a pull request
 ## Contributors
 This project was a collaborative effort by the following individuals:
-- AmariahAK(Gitub username)
-- Audrey-cKH(Gitub username)
-- Munyat(Gitub username)
-- BilRos(Gitub username)
-- BilhaNanetia(Gitub username)
+- AmariahAK(Github username)
+- Audrey-cK(Github username)
+- Munyat(Github username)
+- BilRos(Github username)
+- BilhaNanetia(Github username)
