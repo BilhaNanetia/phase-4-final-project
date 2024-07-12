@@ -1,4 +1,3 @@
-
 from datetime import datetime
 from flask import current_app
 from flask_sqlalchemy import SQLAlchemy
@@ -9,15 +8,13 @@ db = SQLAlchemy()
 
 class User(db.Model, SerializerMixin):
     __tablename__ = 'user'
-    serialize_rules = ('-password_hash', '-recipes', '-favorites', '-comments')
-
+    serialize_rules = ('-password_hash', '-recipes', '-comments')
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     recipes = db.relationship('Recipe', backref='author', lazy=True)
-    favorites = db.relationship('Favorite', backref='user', lazy=True)
     comments = db.relationship('Comment', backref='user', lazy=True)
 
     def set_password(self, password):
@@ -37,17 +34,9 @@ class Recipe(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     ingredients = db.Column(db.Text, nullable=False)
     instructions = db.Column(db.Text, nullable=False)
+    image_url = db.Column(db.String(255), nullable=True)
     comments = db.relationship('Comment', backref='recipe', lazy=True)
 
-
-class Favorite(db.Model, SerializerMixin):
-    __tablename__ = 'favorite'
-    serialize_rules = ('-user', '-recipe')
-    
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
-    
 
 class Comment(db.Model, SerializerMixin):
     __tablename__ = 'comment'
@@ -58,4 +47,3 @@ class Comment(db.Model, SerializerMixin):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'), nullable=False)
-   

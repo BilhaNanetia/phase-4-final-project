@@ -1,6 +1,6 @@
 # YUM KINGDOM
 ## Description
-This is a full-stack web application designed to facilitate users in sharing, discovering, and managing recipes. It provides a seamless interface for users to register, log in, create and browse recipes, add favorites, and leave comments. Additionally, it integrates with an external API to fetch and display recipes, enriching the user’s experience with a diverse range of culinary options. The application is built with a Flask API backend and a responsive React frontend, providing a robust,smooth and interactive experience for cooking enthusiasts.
+This is a full-stack web application designed to facilitate users in sharing, discovering, and managing recipes. It provides a seamless interface for users to register, log in, create, browse recipes,  and leave comments. Additionally, it integrates with an external API to fetch and display recipes, enriching the user’s experience with a diverse range of culinary options. The application is built with a Flask API backend and a responsive React frontend, providing a robust,smooth and interactive experience for cooking enthusiasts.
 ## Features
 - User registration and login with JWT authentication.
 - Logged in users can create and share their own recipes.
@@ -24,11 +24,10 @@ This is a full-stack web application designed to facilitate users in sharing, di
 git clone https://github.com/BilhaNanetia/phase-4-final-project.git
 cd phase-4-final-project
 ```
-- Install the dependencies for the frontend and backend:
+- Install the dependencies for the  backend:
 ```console
 pipenv install
 pipenv shell
-npm install --prefix client
 ```
 - Change into the server directory:
 ```console
@@ -56,8 +55,8 @@ python app.py
 - Run the React app in another terminal:
 ```console
 cd client
-npm install react-icons
-npm start --prefix client
+npm install
+npm start 
 ```
 ## Usage
 - In the web browser, start by creating an account by signing in
@@ -98,3 +97,4 @@ This project was a collaborative effort by the following individuals:
 - Audrey-cKH(Gitub username)
 - Munyat(Gitub username)
 - BilRos(Gitub username)
+- BilhaNanetia(Gitub username)
