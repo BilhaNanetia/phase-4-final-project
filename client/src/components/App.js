@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
-import Navbar from "./Navbar";
-import Home from "./Home";
-import ProfilePage from "./Profile";
-import SignupForm from "./SignupForm";
-import LoginForm from "./LoginForm";
-import RecipeDetails from "./RecipeDetails";
-import ExternalRecipes from "./ExternalRecipes";
-import Search from "./Search";
-import About from "./About";
-import RecipeList from "./RecipeList";
-import RecipeForm from "./RecipeForm";
-import Login from "../pages/Login";
-import Profile from "./Profile";
+import { Route, Routes } from 'react-router-dom';
+import Navbar from './Navbar';
+import Home from './Home';
+import ProfilePage from './Profile';
+import SignupForm from './SignupForm';
+import LoginForm from './LoginForm';
+import RecipeDetails from './RecipeDetails';
+import ExternalRecipes from './ExternalRecipes';
+import Search from './Search';
+import About from './About';
+import RecipeList from './RecipeList';
+import RecipeForm from './RecipeForm';
+
 
 const App = () => {
   const [user, setUser] = useState(null);

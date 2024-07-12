@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+
 function Profile({ user }) {
   const [userData, setUserData] = useState({});
   const [errors, setErrors] = useState([]);
@@ -127,6 +128,7 @@ function Profile({ user }) {
             <li key={comment.id}>{comment.content}</li>
           ))}
       </ul>
+
     </div>
   );
 }
