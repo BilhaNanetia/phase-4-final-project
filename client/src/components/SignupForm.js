@@ -13,12 +13,6 @@ const Signup = ({ onLogin }) => {
     setErrors([]);
     setIsLoading(true);
 
-    if (password!== passwordConfirmation) {
-      setIsLoading(false);
-      return setErrors(["Passwords do not match."]);
-    }
-
-
     fetch("/register", {
       method: "POST",
       headers: {
