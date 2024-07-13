@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+
 
 const Search = () => {
   const [query, setQuery] = useState('');
@@ -45,27 +45,58 @@ const Search = () => {
       <form onSubmit={handleSearch}>
         <label>
           Search:
-          <input type="text" value={query} onChange={handleInputChange} />
+          <input type="text" value={query} onChange={handleInputChange} style={{
+            width: '90%',
+            padding: '10px',
+            fontSize: '18px',
+            borderRadius: '10px',
+            border: '1px solid #ccc'
+          }} />
         </label>
-        <button type="submit" disabled={isLoading}>
+        <button type="submit" disabled={isLoading} style={{
+          padding: '10px 20px',
+          fontSize: '18px',
+          borderRadius: '10px',
+          border: 'none',
+          backgroundColor: '#4CAF50',
+          color: '#fff',
+          cursor: 'pointer'
+        }}>
           {isLoading ? 'Searching...' : 'Search'}
         </button>
       </form>
-      {error && <p className="error-message">{error}</p>}
+      {error && <p className="error-message" style={{
+        color: 'red'
+      }}>{error}</p>}
       {isLoading && <p>Loading...</p>}
       {!isLoading && searchAttempted && (
         results.length > 0 ? (
-          <ul>
-            {results.map(recipe => (
-              <li key={recipe.idMeal}>
-                <Link to={`/recipes/${recipe.idMeal}`}>
-                  <img src={recipe.strMealThumb} alt={recipe.strMeal} width="400"/>
-                  <h2>{recipe.strMeal}</h2>
-                  <p>{recipe.strInstructions}</p>
-                </Link>
-              </li>
+          <div className="card-container" style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center'
+          }}>
+            {results.map((recipe, index) => (
+              <div className="card" key={recipe.idMeal} style={{
+                width: '25%',
+                padding: '20px',
+                margin: '20px',
+                border: '1px solid #ddd',
+                borderRadius: '10px',
+                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
+                backgroundColor: 'rgb(226, 209, 209)',
+                transition: 'all 0.3s ease-in-out',
+                '&:hover': {
+                  transform: 'scale(1.05)',
+                  boxShadow: '0 0 20px rgba(0, 0, 0, 0.3)'
+                }
+              }}>
+                <img src={recipe.strMealThumb} alt={recipe.strMeal} width="460"/>
+                <h2>{recipe.strMeal}</h2>
+                <p>{recipe.strInstructions}</p>
+              </div>
             ))}
-          </ul>
+          </div>
         ) : (
           <p>No recipes found.</p>
         )
