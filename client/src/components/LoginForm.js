@@ -9,20 +9,28 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, email, password }),
-    });
-    if (response.ok) {
-      const data = await response.json();
-      console.log(data); // Log the response data
-      localStorage.setItem("token", data.access_token);
-      onLogin(data.user); // assuming the response contains the user data
-    } else {
-      console.error("Login failed");
+    setIsLoading(true); // Set isLoading to true when submitting the form
+    try {
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data); // Log the response data
+        localStorage.setItem("token", data.access_token);
+        onLogin(data.user); // assuming the response contains the user data
+      } else {
+        const errorResponse = await response.json();
+        setErrors(errorResponse.errors); // Set errors if the response is not ok
+      }
+    } catch (error) {
+      setErrors([error.message]); // Set errors if there's an error
+    } finally {
+      setIsLoading(false); // Set isLoading to false when the request is complete
     }
   };
 
