@@ -144,7 +144,7 @@ def delete_profile():
     db.session.commit()
     return jsonify({'message': 'User deleted successfully'}), 200
 
-# # Create Recipe
+#  Create Recipe
 @app.route('/recipes', methods=['POST'])
 @jwt_required()
 def create_recipe():

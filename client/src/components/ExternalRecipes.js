@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './ExternalRecipes.css';
+
 
 const ExternalRecipes = () => {
   const [recipes, setRecipes] = useState([]);

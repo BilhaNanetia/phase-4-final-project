@@ -27,24 +27,10 @@ const Search = () => {
     }
 
     try {
-      // Local API call
-      const localResponse = await axios.get(`/recipes/search?q=${query}`);
-      const localResults = localResponse.data;
-
-      // External API call (consider proxying this through your backend)
       const externalResponse = await axios.get(`https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`);
       const externalResults = externalResponse.data.meals || [];
 
-      const combinedResults = [
-        ...localResults,
-        ...externalResults.map(meal => ({
-          id: meal.idMeal,
-          title: meal.strMeal,
-          source: 'TheMealDB'
-        }))
-      ];
-
-      setResults(combinedResults);
+      setResults(externalResults);
     } catch (error) {
       console.error('There was an error searching for recipes!', error);
       setError('An error occurred. Please try again later.');
@@ -71,9 +57,12 @@ const Search = () => {
         results.length > 0 ? (
           <ul>
             {results.map(recipe => (
-              <li key={recipe.id || recipe.title}>
-                <Link to={`/recipes/${recipe.id}`}>{recipe.title}</Link>
-                {recipe.source && <span className="source"> ({recipe.source})</span>}
+              <li key={recipe.idMeal}>
+                <Link to={`/recipes/${recipe.idMeal}`}>
+                  <img src={recipe.strMealThumb} alt={recipe.strMeal} width="400"/>
+                  <h2>{recipe.strMeal}</h2>
+                  <p>{recipe.strInstructions}</p>
+                </Link>
               </li>
             ))}
           </ul>
