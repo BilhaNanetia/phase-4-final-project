@@ -1,9 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-from flask_cors import CORS
 import requests
 from config import Config
 from models import db, User, Recipe, Comment
@@ -12,7 +11,6 @@ blacklist = set()
 
 app = Flask(__name__)
 app.config.from_object(Config)
-CORS(app) 
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -20,9 +18,6 @@ bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 
-
-
-# User Registration
 @app.route('/register', methods=['POST'])
 def register():
     if request.is_json:
@@ -36,31 +31,21 @@ def register():
         password = request.form.get('password')
 
     if not username or not email or not password:
-        app.logger.error('Missing required fields')
-        return jsonify({'errors': ['Missing required fields']}), 400
-
-    if User.query.filter_by(username=username).first():
-        app.logger.error('Username already exists')
-        return jsonify({'errors': ['Username already exists']}), 400
+        return jsonify({'message': 'Missing required fields'}), 400
 
     if User.query.filter_by(email=email).first():
-        app.logger.error('Email already exists')
-        return jsonify({'errors': ['Email already exists']}), 400
+        return jsonify({'message': 'Email already exists'}), 400
 
-    try:
-        user = User(username=username, email=email)
-        user.set_password(password)
-        db.session.add(user)
-        db.session.commit()
-    except Exception as e:
-        app.logger.error(f'Error creating user: {e}')
-        return jsonify({'errors': ['Error creating user']}), 500
+    user = User(username=username, email=email)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
 
-    return jsonify({'message': 'User created successfully'}), 201
+    access_token = create_access_token(identity={'id': user.id, 'username': user.username})
+
+    return jsonify(access_token=access_token, user={'id': user.id, 'username': user.username}), 201
 
 
-
-# User Login
 @app.route('/login', methods=['POST'])
 def login():
     if request.is_json:
@@ -72,23 +57,14 @@ def login():
         password = request.form.get('password')
 
     if not email or not password:
-        app.logger.error('Missing required fields')
-        return jsonify({'errors': ['Missing required fields']}), 400
+        return jsonify({'message': 'Missing required fields'}), 400
 
     user = User.query.filter_by(email=email).first()
     if user is None or not user.check_password(password):
-        app.logger.error('Invalid credentials')
-        return jsonify({'errors': ['Invalid credentials']}), 401
+        return jsonify({'message': 'Invalid credentials'}), 401
 
     access_token = create_access_token(identity={'id': user.id, 'username': user.username})
-    return jsonify(access_token=access_token), 200
-
-# Logout user
-@app.route('/logout', methods=['POST'])
-@jwt_required()
-def logout():
-    # Invalidate the token on the client side (e.g., by deleting it from local storage)
-    return jsonify({'message': 'Logged out successfully'}), 200
+    return jsonify(access_token=access_token, user={'id': user.id, 'username': user.username}), 200
 
 
 # Get User Profile
@@ -107,7 +83,7 @@ def get_profile():
         'email': user.email
     }
 
-    return jsonify(user_data), 200
+    return make_response(jsonify(user_data), 200)
 
 # Update User Profile
 @app.route('/profile', methods=['PUT'])
@@ -318,18 +294,23 @@ def get_comments(recipe_id):
 
     return jsonify(output), 200
 
-# Check if User is Authenticated
 @app.route('/checksession', methods=['GET'])
 @jwt_required()
 def check_session():
-    current_user = get_jwt_identity()
-    if not current_user:
-        return jsonify({'message': 'No active session'}), 401
+    try:
+        current_user = get_jwt_identity()
+        app.logger.info(f'Current User: {current_user}')
+        if not current_user:
+            return jsonify({'message': 'No active session'}), 401
 
-    return jsonify({
-        'id': current_user['id'],
-        'username': current_user['username']
-    }), 200
+        return make_response(jsonify({
+            'id': current_user['id'],
+            'username': current_user['username']
+        }), 200)
+    except Exception as e:
+        app.logger.error(f'Error: {e}')
+        return jsonify({'message': 'Error processing request'}), 500
+
 
 
 if __name__ == '__main__':
