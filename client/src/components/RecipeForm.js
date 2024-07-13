@@ -1,78 +1,72 @@
-
-import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import './RecipeForm.css';
 
-const RecipeForm = () => {
-  const navigate = useNavigate();
+const RecipeForm = ({ onRecipeSubmit }) => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [ingredients, setIngredients] = useState('');
+  const [instructions, setInstructions] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const newRecipe = {
+      title,
+      description,
+      ingredients,
+      instructions,
+    };
+
+    try {
+      const response = await axios.post('http://localhost:5555/recipes', newRecipe, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+      onRecipeSubmit(response.data.recipe);
+      setTitle('');
+      setDescription('');
+      setIngredients('');
+      setInstructions('');
+    } catch (error) {
+      console.error('Error adding recipe:', error);
+    }
+  };
 
   return (
-    <div>
-      <h1>Create Recipe</h1>
-      <Formik
-        initialValues={{
-          title: '',
-          description: '',
-          ingredients: '',
-          instructions: '',
-        }}
-        validate={values => {
-          const errors = {};
-          if (!values.title) {
-            errors.title = 'Required';
-          }
-          if (!values.description) {
-            errors.description = 'Required';
-          }
-          if (!values.ingredients) {
-            errors.ingredients = 'Required';
-          }
-          if (!values.instructions) {
-            errors.instructions = 'Required';
-          }
-          return errors;
-        }}
-        onSubmit={async (values, { setSubmitting }) => {
-          try {
-            await axios.post('/recipes', values);
-            setSubmitting(false);
-            navigate('/');
-          } catch (error) {
-            console.error('Error in creating recipe:', error);
-            setSubmitting(false);
-          }
-        }}
-      >
-        {({ isSubmitting }) => (
-          <Form>
-            <div>
-              <label htmlFor="title">Title</label>
-              <Field type="text" name="title" />
-              <ErrorMessage name="title" component="div" />
-            </div>
-            <div>
-              <label htmlFor="description">Description</label>
-              <Field type="text" name="description" />
-              <ErrorMessage name="description" component="div" />
-            </div>
-            <div>
-              <label htmlFor="ingredients">Ingredients</label>
-              <Field type="text" name="ingredients" />
-              <ErrorMessage name="ingredients" component="div" />
-            </div>
-            <div>
-              <label htmlFor="instructions">Instructions</label>
-              <Field type="text" name="instructions" />
-              <ErrorMessage name="instructions" component="div" />
-            </div>
-            <button type="submit" disabled={isSubmitting}>
-              Submit
-            </button>
-          </Form>
-        )}
-      </Formik>
-    </div>
+    <form onSubmit={handleSubmit} className="recipe-form">
+      <div className="form-group">
+        <label>Title:</label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <label>Description:</label>
+        <input
+          type="text"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <label>Ingredients:</label>
+        <textarea
+          value={ingredients}
+          onChange={(e) => setIngredients(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <label>Instructions:</label>
+        <textarea
+          value={instructions}
+          onChange={(e) => setInstructions(e.target.value)}
+        />
+      </div>
+      <button type="submit">Submit Recipe</button>
+    </form>
   );
 };
 

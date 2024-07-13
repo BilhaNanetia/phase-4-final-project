@@ -5,7 +5,9 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import requests
 from config import Config
-from models import db, User, Recipe, Favorite, Comment
+from models import db, User, Recipe, Comment
+
+blacklist = set() 
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -118,25 +120,30 @@ def delete_profile():
     db.session.commit()
     return jsonify({'message': 'User deleted successfully'}), 200
 
-# Create Recipe
+#  Create Recipe
 @app.route('/recipes', methods=['POST'])
 @jwt_required()
 def create_recipe():
     data = request.get_json()
     current_user = get_jwt_identity()
 
-    recipe = Recipe(
-        title=data['title'],
-        description=data['description'],
-        ingredients=data['ingredients'],
-        instructions=data['instructions'],
-        user_id=current_user['id']
-    )
+    try:
+        recipe = Recipe(
+            title=data['title'],
+            description=data['description'],
+            ingredients=data['ingredients'],
+            instructions=data['instructions'],
+            user_id=current_user['id']
+        )
 
-    db.session.add(recipe)
-    db.session.commit()
+        db.session.add(recipe)
+        db.session.commit()
 
-    return jsonify({'message': 'Recipe created successfully'}), 201
+        return jsonify({'message': 'Recipe created successfully', 'recipe': recipe.serialize()}), 201
+    except KeyError:
+        return jsonify({'error': 'Missing required fields'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 # Get All Recipes
 @app.route('/recipes', methods=['GET'])
@@ -216,29 +223,22 @@ def delete_recipe(recipe_id):
     db.session.delete(recipe)
     db.session.commit()
     return jsonify({'message': 'Recipe deleted successfully'}), 200
+# Search Recipes
+@app.route('/recipes/search', methods=['GET'])
+def search_recipes():
+    q = request.args.get('q')
+    if not q:
+        return jsonify({'message': 'Search query is required'}), 400
 
-# Add Recipe to Favorites
-@app.route('/favorites', methods=['POST'])
-@jwt_required()
-def add_favorite():
-    data = request.get_json()
-    current_user = get_jwt_identity()
+    recipes = Recipe.query.filter(
+        (Recipe.title.ilike(f'%{q}%')) |
+        (Recipe.description.ilike(f'%{q}%')) |
+        (Recipe.ingredients.ilike(f'%{q}%')) |
+        (Recipe.instructions.ilike(f'%{q}%'))
+    ).all()
 
-    favorite = Favorite(user_id=current_user['id'], recipe_id=data['recipe_id'])
-    db.session.add(favorite)
-    db.session.commit()
-
-    return jsonify({'message': 'Recipe added to favorites'}), 201
-
-# Get User's Favorites
-@app.route('/favorites', methods=['GET'])
-@jwt_required()
-def get_favorites():
-    current_user = get_jwt_identity()
-    favorites = Favorite.query.filter_by(user_id=current_user['id']).all()
     output = []
-    for favorite in favorites:
-        recipe = Recipe.query.get(favorite.recipe_id)
+    for recipe in recipes:
         recipe_data = {
             'id': recipe.id,
             'title': recipe.title,
@@ -250,6 +250,7 @@ def get_favorites():
         output.append(recipe_data)
 
     return jsonify(output), 200
+
 
 # Fetch Recipes from Public API
 @app.route('/external-recipes', methods=['GET'])

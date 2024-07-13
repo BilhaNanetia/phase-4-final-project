@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+
 
 const ExternalRecipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -7,8 +8,8 @@ const ExternalRecipes = () => {
   useEffect(() => {
     const fetchExternalRecipes = async () => {
       try {
-        const response = await axios.get('/external-recipes');
-        setRecipes(response.data);
+        const response = await axios.get('http://localhost:5555/external-recipes'); 
+        setRecipes(response.data.meals);
       } catch (error) {
         console.error('There was an error fetching the external recipes!', error);
       }
@@ -18,12 +19,16 @@ const ExternalRecipes = () => {
   }, []);
 
   return (
-    <div>
+    <div className="container">
       <h1>External Recipes</h1>
       {recipes.length > 0 ? (
-        <ul>
+        <ul className="recipe-list">
           {recipes.map(recipe => (
-            <li key={recipe.id}>{recipe.title}</li>
+            <li key={recipe.idMeal}>
+              <img src={recipe.strMealThumb} alt={recipe.strMeal} width="400"/>
+              <h2>{recipe.strMeal}</h2>
+              <p>{recipe.strInstructions}</p>
+            </li>
           ))}
         </ul>
       ) : (
