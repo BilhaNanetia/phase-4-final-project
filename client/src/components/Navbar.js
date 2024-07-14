@@ -3,48 +3,69 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { IoClose, IoMenu } from "react-icons/io5";
 import "./Navbar.css";
 
-const Navbar = ({ user, setUser }) => {
-  const navigate = useNavigate();
-
+const Navbar = ({ user, onLogout }) => {
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setUser(null);
-    navigate("/login");
+    onLogout();
   };
 
   return (
     <header className="header">
       <nav className="nav container">
         <NavLink to="/" className="nav__logo">
-          <img src="https://www.festfoods.com/wp-content/uploads/06052024-Dads-Chicken-Breast.png" alt="Recipe Logo" />
+          <img
+            src="https://www.festfoods.com/wp-content/uploads/06052024-Dads-Chicken-Breast.png"
+            alt="Recipe Logo"
+          />
           Yum Kingdom
         </NavLink>
         <div className="nav__menu" id="nav-menu">
           <ul className="nav__list">
             <li className="nav__item">
-              <NavLink exact to="/" className="nav__link" activeClassName="nav__link--active">
+              <NavLink
+                exact
+                to="/"
+                className="nav__link"
+                activeClassName="nav__link--active"
+              >
                 Home
               </NavLink>
             </li>
             {user && (
               <>
                 <li className="nav__item">
-                  <NavLink to="/profile" className="nav__link" activeClassName="nav__link--active">
+                  <NavLink
+                    to="/profile"
+                    className="nav__link"
+                    activeClassName="nav__link--active"
+                  >
                     Profile ({user.username})
                   </NavLink>
                 </li>
                 <li className="nav__item">
-                  <NavLink to="/about" className="nav__link" activeClassName="nav__link--active">
+                  <NavLink
+                    to="/about"
+                    className="nav__link"
+                    activeClassName="nav__link--active"
+                  >
                     About Us
                   </NavLink>
                 </li>
                 <li className="nav__item">
-                  <NavLink to="/search" className="nav__link" activeClassName="nav__link--active">
+                  <NavLink
+                    to="/search"
+                    className="nav__link"
+                    activeClassName="nav__link--active"
+                  >
                     Search
                   </NavLink>
                 </li>
                 <li className="nav__item">
-                  <NavLink to="/recipes" className="nav__link" activeClassName="nav__link--active">
+                  <NavLink
+                    to="/recipes"
+                    className="nav__link"
+                    activeClassName="nav__link--active"
+                  >
                     RecipeList
                   </NavLink>
                 </li>
@@ -58,12 +79,20 @@ const Navbar = ({ user, setUser }) => {
             {!user && (
               <>
                 <li className="nav__item">
-                  <NavLink to="/login" className="nav__link" activeClassName="nav__link--active">
+                  <NavLink
+                    to="/login"
+                    className="nav__link"
+                    activeClassName="nav__link--active"
+                  >
                     Login
                   </NavLink>
                 </li>
                 <li className="nav__item">
-                  <NavLink to="/register" className="nav__link" activeClassName="nav__link--active">
+                  <NavLink
+                    to="/register"
+                    className="nav__link"
+                    activeClassName="nav__link--active"
+                  >
                     SignupForm
                   </NavLink>
                 </li>
