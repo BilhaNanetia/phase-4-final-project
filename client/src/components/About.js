@@ -14,7 +14,6 @@ const About = () => {
         <li>Search for specific recipes by ingredients or keywords.</li>
         <li>View detailed instructions and ingredients for each recipe.</li>
         <li>Create and share your own recipes.</li>
-        <li>Leave comments on recipes</li>
         <li>User profile management</li>
         <li>Logout from the application</li>
       </ul>

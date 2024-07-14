@@ -7,7 +7,6 @@ This is a full-stack web application designed to facilitate users in sharing, di
 - Logged in users can search and browse recipes from an external API
 - Logged in users can click on a recipe to view detailed information, including ingredients and instructions
 - Logged in users can view a list of all recipes.
-- Logged in users can comment on recipes.
 - Logged in users can manage their own profile
 - Logged in users can log out from the application
 ## Prerequisites
@@ -61,7 +60,7 @@ npm start
 - In the web browser, start by creating an account by signing in
 - Click on the RecipeList in the navbar to browse recipes and create new ones 
 - Click on the Search in the navbar to search for recipes 
-- Comment on other recipes and view other people's comments on different recipes
+- View other people's comments on different recipes
 - Click on Profile in the navbar to view your profile
 - Click on Edit Profile to manage your profile
 - Click on the About us to view details about this application
