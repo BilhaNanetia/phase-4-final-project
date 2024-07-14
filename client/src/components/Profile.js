@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Profile = ({ user, setUser }) => {
   const [userData, setUserData] = useState(null);
   const [editMode, setEditMode] = useState(false);
+  const [deleteSuccess, setDeleteSuccess] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,6 +48,7 @@ const Profile = ({ user, setUser }) => {
         if (r.ok) {
           localStorage.removeItem("token");
           setUser(null);
+          setDeleteSuccess(true); 
           // Navigate to home page after state update
           navigate("/", { replace: true });
         } else {
@@ -66,6 +68,7 @@ const Profile = ({ user, setUser }) => {
 
   return (
     <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px", border: "1px solid #ccc", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+      {deleteSuccess && <p style={{ color: 'green' }}>Profile deleted successfully!</p>}
       <h1 style={{ textAlign: "center", color: "#2c3e50" }}>Profile</h1>
       <p style={{ fontSize: "1.2em", color: "#34495e" }}>
         <strong>Username:</strong> {userData.username}
