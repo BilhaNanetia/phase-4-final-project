@@ -5,7 +5,7 @@ This is a full-stack web application designed to facilitate users in sharing, di
 - User registration and login with JWT authentication.
 - Logged in users can create and share their own recipes.
 - Logged in users can search and browse recipes from an external API
-- Logged in users can click on a recipe to view detailed information, including ingredients, instructions, and author details.
+- Logged in users can click on a recipe to view detailed information, including ingredients and instructions
 - Logged in users can view a list of all recipes.
 - Logged in users can comment on recipes.
 - Logged in users can manage their own profile
@@ -59,9 +59,13 @@ npm start
 ```
 ## Usage
 - In the web browser, start by creating an account by signing in
-- Browse recipes, create new ones or  search for recipes 
+- Click on the RecipeList in the navbar to browse recipes and create new ones 
+- Click on the Search in the navbar to search for recipes 
 - Comment on other recipes and view other people's comments on different recipes
-- Manage your profile
+- Click on Profile in the navbar to view your profile
+- Click on Edit Profile to manage your profile
+- Click on the About use to view details about this application
+- Click on logout to log out of the application
 ## API Endpoints
 - Recipes
     - GET /recipes: Retrieve all recipes
@@ -75,6 +79,7 @@ npm start
     - POST /login: Log in
     - GET /profile: View user's profile
     - PUT /profile: Update user profile
+    - GET /checksession: Checks if a user is logged in
 - Comments
     - POST /recipes/{id}/comments: Add comment to a recipe
     - GET /recipes/{id}/comments: Get comments for a recipe
@@ -88,8 +93,8 @@ npm start
 - Open a pull request
 ## Contributors
 This project was a collaborative effort by the following individuals:
-- AmariahAK(Github username)
-- Audrey-cK(Github username)
-- Munyat(Github username)
-- BilRos(Github username)
-- BilhaNanetia(Github username)
+- <a href="https://github.com/Munyat">Munyat</a> 
+- <a href="https://github.com/AmariahAK">AmariahAK</a>
+- <a href="https://github.com/BilRos">BilRos</a> 
+- <a href="https://github.com/Audrey-cK">Audrey-cK</a>
+- <a href="https://github.com/BilhaNanetia">BilhaNanetia</a>

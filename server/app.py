@@ -224,6 +224,7 @@ def delete_recipe(recipe_id):
     db.session.delete(recipe)
     db.session.commit()
     return jsonify({'message': 'Recipe deleted successfully'}), 200
+
 # Search Recipes
 @app.route('/recipes/search', methods=['GET'])
 def search_recipes():
