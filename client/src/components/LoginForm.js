@@ -22,10 +22,10 @@ const Login = ({ onLogin }) => {
         const data = await response.json();
         console.log(data); // Log the response data
         localStorage.setItem("token", data.access_token);
-        onLogin(data.user); // assuming the response contains the user data
+        onLogin(data.user); 
       } else {
         const errorResponse = await response.json();
-        setErrors(errorResponse.errors); // Set errors if the response is not ok
+        setErrors(errorResponse.errors); 
       }
     } catch (error) {
       setErrors([error.message]); // Set errors if there's an error

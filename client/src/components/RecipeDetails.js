@@ -24,7 +24,7 @@ const RecipeDetails = () => {
     return <div>Loading...</div>;
   }
 
-  const isLocalRecipe = !recipe.source; // Assuming local recipes don't have a 'source' field
+  const isLocalRecipe = !recipe.source; 
 
   return (
     <div className="recipe-details-overlay">

@@ -11,17 +11,17 @@ const RecipeForm = ({ onRecipeSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setTitle(''); // Clear title input
-    setDescription(''); // Clear description input
-    setIngredients(''); // Clear ingredients textarea
-    setInstructions(''); // Clear instructions textarea
-    setMessage(''); // Clear message
+    setTitle(''); 
+    setDescription(''); 
+    setIngredients(''); 
+    setInstructions(''); 
+    setMessage(''); 
 
     const newRecipe = {
-      title: title, // Use the original title value
-      description: description, // Use the original description value
-      ingredients: ingredients.split('\n'), // convert textarea to array of strings
-      instructions: instructions.split('\n'), // convert textarea to array of strings
+      title: title, 
+      description: description, 
+      ingredients: ingredients.split('\n'), 
+      instructions: instructions.split('\n'), 
     };
 
     try {
