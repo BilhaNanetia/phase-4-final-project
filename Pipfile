@@ -11,6 +11,9 @@ flask-bcrypt = "*"
 flask-jwt-extended = "*"
 requests = "*"
 python-dotenv = "*"
+flask-wtf = "*"
+flask-login = "*"
+pillow = "*"
 
 [dev-packages]
 
