@@ -13,6 +13,7 @@ import RecipeForm from "./RecipeForm";
 import Login from "../pages/Login";
 import Profile from "./Profile";
 import Logout from "./Logout";
+
 const App = () => {
   const [user, setUser] = useState(null);
 
@@ -52,12 +53,11 @@ const App = () => {
   console.log(user.id);
   return (
     <>
-      <Profile user={user} />
-       <Navbar /> 
-      <Logout onLogout={handleLogout} />
-       <Routes>
+      <Navbar user={user} onLogout={handleLogout} />
+      <Routes>
         <Route exact path="/" element={<HomePage />} />
         <Route path="/profile" element={<Profile user={user} />} />
+        <Route path="/logout" element={<Logout onLogout={handleLogout} />} />
         <Route path="/register" component={SignupForm} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/recipes/:id" element={<RecipeDetails />} />
@@ -66,7 +66,7 @@ const App = () => {
         <Route path="/about" element={<About />} />
         <Route path="/recipes" element={<RecipeList />} />
         <Route path="/create-recipe" element={<RecipeForm />} />
-      </Routes> 
+      </Routes>
     </>
   );
 };
