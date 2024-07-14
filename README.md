@@ -64,8 +64,8 @@ npm start
 - Comment on other recipes and view other people's comments on different recipes
 - Click on Profile in the navbar to view your profile
 - Click on Edit Profile to manage your profile
-- Click on the About use to view details about this application
-- Click on logout to log out of the application
+- Click on the About us to view details about this application
+- Click on logout to log out from the application
 ## API Endpoints
 - Recipes
     - GET /recipes: Retrieve all recipes
