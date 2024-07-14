@@ -1,11 +1,11 @@
 .header {
-    background-color: #f1e1e1;
+    background-color: #ebcfec;
     border-bottom: 1px solid #d1d5db;
     position: sticky;
     top: 0;
     z-index: 50;
     width: 100%;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(151, 36, 151, 0.1);
   }
   
   .nav {
@@ -22,7 +22,7 @@
     align-items: center;
     font-size: 2.5rem;
     font-weight: 700;
-    color: #000000;
+    color: #723737;
     text-decoration: none;
   }
   
@@ -51,7 +51,7 @@
   }
   
   .nav__link {
-    color: #374151;
+    color: #4e2753;
     text-decoration: none;
     font-weight: 500;
     padding: 0.5rem 1rem;

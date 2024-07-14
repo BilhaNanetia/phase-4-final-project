@@ -49,6 +49,7 @@ const Profile = ({ user, setUser }) => {
           localStorage.removeItem("token");
           setUser(null);
           setDeleteSuccess(true); 
+          setUserData(null);
           // Navigate to home page after state update
           navigate("/", { replace: true });
         } else {
@@ -64,7 +65,7 @@ const Profile = ({ user, setUser }) => {
     return <EditProfile user={user} />;
   }
 
-  if (!userData) return <div>Loading...</div>;
+  if (!userData) return <div style={{ fontSize: "1.5em", color: "gray", textAlign: "center" }}>No profile found</div>;
 
   return (
     <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px", border: "1px solid #ccc", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>

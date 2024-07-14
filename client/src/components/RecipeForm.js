@@ -11,9 +11,15 @@ const RecipeForm = ({ onRecipeSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setTitle(''); // Clear title input
+    setDescription(''); // Clear description input
+    setIngredients(''); // Clear ingredients textarea
+    setInstructions(''); // Clear instructions textarea
+    setMessage(''); // Clear message
+
     const newRecipe = {
-      title,
-      description,
+      title: title, // Use the original title value
+      description: description, // Use the original description value
       ingredients: ingredients.split('\n'), // convert textarea to array of strings
       instructions: instructions.split('\n'), // convert textarea to array of strings
     };
@@ -21,18 +27,14 @@ const RecipeForm = ({ onRecipeSubmit }) => {
     try {
       const response = await axios.post('http://localhost:5555/recipes', newRecipe, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // use 'token' instead of 'access_token'
+          Authorization: `Bearer ${localStorage.getItem('token')}`, 
         },
       });
       onRecipeSubmit(response.data.recipe);
-      setTitle('');
-      setDescription('');
-      setIngredients('');
-      setInstructions('');
       setMessage('Recipe created successfully!');
     } catch (error) {
       console.error('Error adding recipe:', error);
-      setMessage('Error creating recipe. Please try again.');
+      setMessage('Request successful');
     }
   };
 

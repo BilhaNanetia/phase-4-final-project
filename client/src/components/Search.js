@@ -84,7 +84,7 @@ const Search = () => {
                 border: '1px solid #ddd',
                 borderRadius: '10px',
                 boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-                backgroundColor: 'rgb(226, 209, 209)',
+                backgroundColor: 'rgb(151, 36, 151, 0.1)',
                 transition: 'all 0.3s ease-in-out',
                 '&:hover': {
                   transform: 'scale(1.05)',

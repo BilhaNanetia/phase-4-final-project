@@ -7,7 +7,7 @@
 }
 
 .recipe-card {
-  background-color: rgb(100, 55, 55);
+  background-color: rgb(165, 121, 156);
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -32,6 +32,8 @@
   font-weight: 600;
   margin: 10px;
   text-align: center;
+  color: #3f2042;
+
 }
 
 .recipe-details {
