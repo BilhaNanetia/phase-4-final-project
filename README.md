@@ -36,16 +36,8 @@ cd server
 export FLASK_APP=app.py
 export FLASK_RUN_PORT=5555
 ```
-- Set up the database:
-```console
-flask db init
-flask db migrate -m "Initial migration."
-flask db upgrade head
-```
-- Seed the database with initial data
-```console
-python seed.py
-```
+- Since the database is already setup,
+
 - Run the Flask API with:
 ```console
 python app.py
