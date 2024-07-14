@@ -33,21 +33,7 @@ const Navbar = ({ isLoggedIn, onLogout }) => {
                     Profile
                   </NavLink>
                 </li>
-                <li className="nav__item">
-                  <NavLink to="/favorites" className="nav__link" activeClassName="nav__link--active">
-                    Favorites
-                  </NavLink>
-                </li>
-                <li className="nav__item">
-                  <NavLink to="/external-recipes" className="nav__link" activeClassName="nav__link--active">
-                    External Recipes
-                  </NavLink>
-                </li>
-                <li className="nav__item">
-                  <NavLink to="/create-recipe" className="nav__link" activeClassName="nav__link--active">
-                    Create Recipe
-                  </NavLink>
-                </li>
+                
                 <li className="nav__item">
                   <NavLink to="/logout" className="nav__link" onClick={handleLogout}>
                     Logout

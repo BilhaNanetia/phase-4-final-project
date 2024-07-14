@@ -44,8 +44,8 @@ const Search = () => {
       <h1>Search Recipes</h1>
       <form onSubmit={handleSearch}>
         <label>
-          Search:
-          <input type="text" value={query} onChange={handleInputChange} style={{
+          Search by ingredient:
+          <input type="text" value={query} onChange={handleInputChange} placeholder="Enter an ingredient (e.g. chicken, beef, etc.)" style={{
             width: '90%',
             padding: '10px',
             fontSize: '18px',

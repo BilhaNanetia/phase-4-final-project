@@ -17,7 +17,7 @@ migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
-
+# User Registration
 @app.route('/register', methods=['POST'])
 def register():
     if request.is_json:
@@ -45,6 +45,7 @@ def register():
 
     return jsonify(access_token=access_token, user={'id': user.id, 'username': user.username}), 201
 
+# User Login
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -294,6 +295,7 @@ def get_comments(recipe_id):
 
     return jsonify(output), 200
 
+#Check if user is logged in
 @app.route('/checksession', methods=['GET'])
 @jwt_required()
 def check_session():
