@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 const EditProfile = ({ user }) => {
   const [userData, setUserData] = useState(null);
   const [message, setMessage] = useState("");
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [bio, setBio] = useState("");
 
   useEffect(() => {
     if (user && user.id) {
@@ -14,13 +16,17 @@ const EditProfile = ({ user }) => {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((r) => {
-          if (r.ok) {
-            r.json().then((data) => setUserData(data));
-          } else {
-            r.json().then(() => setMessage("Failed to fetch profile"));
-          }
-        })
+      .then((r) => {
+        if (r.ok) {
+          r.json().then((data) => {
+            setUserData(data);
+            setProfilePicture(data.profile_picture);
+            setBio(data.bio);
+          });
+        } else {
+          r.json().then(() => setMessage("Failed to fetch profile"));
+        }
+      })
         .catch((error) => {
           console.error("Error fetching profile:", error);
           setMessage("Error fetching profile");
@@ -32,17 +38,19 @@ const EditProfile = ({ user }) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
     if (token) {
+      const formData = new FormData();
+      formData.append("username", userData.username);
+      formData.append("email", userData.email);
+      formData.append("password", userData.password);
+      formData.append("profile_picture", profilePicture);
+      formData.append("bio", bio);
+
       fetch("/profile", {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          username: userData.username,
-          email: userData.email,
-          password: userData.password,
-        }),
+        body: formData,
       })
         .then((r) => {
           if (r.ok) {
@@ -59,6 +67,14 @@ const EditProfile = ({ user }) => {
           setMessage("Error updating profile");
         });
     }
+  };
+
+  const handleProfilePictureChange = (e) => {
+    setProfilePicture(e.target.files[0]);
+  };
+
+  const handleBioChange = (e) => {
+    setBio(e.target.value);
   };
 
   if (!userData) return <div>Loading...</div>;
@@ -93,6 +109,22 @@ const EditProfile = ({ user }) => {
             onChange={(e) => setUserData({ ...userData, password: e.target.value })}
             placeholder="Leave blank to keep current password"
             style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc" }}
+          />
+        </div>
+        <div style={{ marginBottom: "15px" }}>
+          <label style={{ display: "block", marginBottom: "5px", color: "#34495e" }}>Profile Picture:</label>
+          <input
+            type="file"
+            onChange={handleProfilePictureChange}
+            style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc" }}
+          />
+        </div>
+        <div style={{ marginBottom: "15px" }}>
+          <label style={{ display: "block", marginBottom: "5px", color: "#34495e" }}>Bio:</label>
+          <textarea
+            value={bio}
+            onChange={handleBioChange}
+            style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc", minHeight: "100px" }}
           />
         </div>
         <button type="submit" style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "none", backgroundColor: "#16a085", color: "#fff", fontWeight: "bold" }}>Update Profile</button>

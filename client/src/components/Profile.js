@@ -18,14 +18,14 @@ const Profile = ({ user, setUser }) => {
           Authorization: `Bearer ${token}`,
         },
       })
-        .then((r) => {
+       .then((r) => {
           if (r.ok) {
             r.json().then((data) => setUserData(data));
           } else {
             r.json().then(() => console.error("Failed to fetch profile"));
           }
         })
-        .catch((error) => {
+       .catch((error) => {
           console.error("Error fetching profile:", error);
         });
     }
@@ -44,7 +44,7 @@ const Profile = ({ user, setUser }) => {
         Authorization: `Bearer ${token}`,
       },
     })
-      .then((r) => {
+     .then((r) => {
         if (r.ok) {
           localStorage.removeItem("token");
           setUser(null);
@@ -56,7 +56,7 @@ const Profile = ({ user, setUser }) => {
           console.error("Failed to delete profile");
         }
       })
-      .catch((error) => {
+     .catch((error) => {
         console.error("Error deleting profile:", error);
       });
   };
@@ -71,11 +71,15 @@ const Profile = ({ user, setUser }) => {
     <div style={{ maxWidth: "600px", margin: "0 auto", padding: "20px", border: "1px solid #ccc", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
       {deleteSuccess && <p style={{ color: 'green' }}>Profile deleted successfully!</p>}
       <h1 style={{ textAlign: "center", color: "#2c3e50" }}>Profile</h1>
+      <img src={userData.profile_picture || '/default-image.jpg'} alt={userData.username} style={{ width: "200px", height: "200px", borderRadius: "50%", objectFit: "cover", margin: "0 auto 20px" }} />
       <p style={{ fontSize: "1.2em", color: "#34495e" }}>
         <strong>Username:</strong> {userData.username}
       </p>
       <p style={{ fontSize: "1.2em", color: "#34495e" }}>
         <strong>Email:</strong> {userData.email}
+      </p>
+      <p style={{ fontSize: "1.2em", color: "#34495e" }}>
+        <strong>Bio:</strong> {userData.bio}
       </p>
 
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>

@@ -16,6 +16,8 @@ class User(db.Model, SerializerMixin):
     password_hash = db.Column(db.String(128), nullable=False)
     recipes = db.relationship('Recipe', backref='author', lazy=True)
     comments = db.relationship('Comment', backref='user', lazy=True)
+    profile_picture = db.Column(db.String(255), nullable=True)  
+    bio = db.Column(db.String(255), nullable=True) 
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

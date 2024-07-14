@@ -25,10 +25,14 @@ def register():
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')
+        profile_picture = data.get('profile_picture')
+        bio = data.get('bio')
     else:
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
+        profile_picture = request.form.get('profile_picture')
+        bio = request.form.get('bio')
 
     if not username or not email or not password:
         return jsonify({'message': 'Missing required fields'}), 400
@@ -36,7 +40,7 @@ def register():
     if User.query.filter_by(email=email).first():
         return jsonify({'message': 'Email already exists'}), 400
 
-    user = User(username=username, email=email)
+    user = User(username=username, email=email,profile_picture=profile_picture,bio=bio)
     user.set_password(password)
     db.session.add(user)
     db.session.commit()
@@ -81,7 +85,9 @@ def get_profile():
     user_data = {
         'id': user.id,
         'username': user.username,
-        'email': user.email
+        'email': user.email,
+        'profile_picture': user.profile_picture,
+        'bio': user.bio
     }
 
     return make_response(jsonify(user_data), 200)
@@ -103,6 +109,10 @@ def update_profile():
         user.email = data['email']
     if 'password' in data:
         user.set_password(data['password'])
+    if 'profile_picture' in data:
+        user.profile_picture = data['profile_picture']
+    if 'bio' in data:
+        user.bio = data['bio']
 
     db.session.commit()
     return jsonify({'message': 'Profile updated successfully'}), 200
