@@ -1,4 +1,4 @@
-#seed.py
+# seed.py
 from app import app, db
 from models import User, Recipe, Favorite, Comment
 
@@ -9,10 +9,22 @@ def seed():
         db.create_all()
 
         # Create some users
-        user1 = User(username='user1', email='user1@example.com')
+        user1 = User(
+            username='user1',
+            email='user1@example.com',
+            image_file='default_user_profile.jpg',
+            bio='Hello, I am user1 and I love cooking!'
+        )
         user1.set_password('password')
-        user2 = User(username='user2', email='user2@example.com')
+        
+        user2 = User(
+            username='user2',
+            email='user2@example.com',
+            image_file='default_user_profile.jpg',
+            bio='Hello, I am user2 and I enjoy trying new recipes!'
+        )
         user2.set_password('password')
+        
         db.session.add(user1)
         db.session.add(user2)
         db.session.commit()
@@ -53,7 +65,3 @@ def seed():
 
 if __name__ == "__main__":
     seed()
-
- 
-
-
