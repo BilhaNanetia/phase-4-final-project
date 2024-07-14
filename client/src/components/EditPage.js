@@ -64,43 +64,40 @@ const EditProfile = ({ user }) => {
   if (!userData) return <div>Loading...</div>;
 
   return (
-    <div>
-      <h1>Edit Profile</h1>
+    <div style={{ maxWidth: "60rem", margin: "0 auto", padding: "30px", border: "1px solid #ccc", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+      <h1 style={{ textAlign: "center", color: "#2c3e50" }}>Edit Profile</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
+        <div style={{ marginBottom: "15px" }}>
+          <label style={{ display: "block", marginBottom: "5px", color: "#34495e" }}>Username:</label>
           <input
             type="text"
             value={userData.username}
-            onChange={(e) =>
-              setUserData({ ...userData, username: e.target.value })
-            }
+            onChange={(e) => setUserData({ ...userData, username: e.target.value })}
+            style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc" }}
           />
         </div>
-        <div>
-          <label>Email:</label>
+        <div style={{ marginBottom: "15px" }}>
+          <label style={{ display: "block", marginBottom: "5px", color: "#34495e" }}>Email:</label>
           <input
             type="email"
             value={userData.email}
-            onChange={(e) =>
-              setUserData({ ...userData, email: e.target.value })
-            }
+            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+            style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc" }}
           />
         </div>
-        <div>
-          <label>Password:</label>
+        <div style={{ marginBottom: "15px" }}>
+          <label style={{ display: "block", marginBottom: "5px", color: "#34495e" }}>Password:</label>
           <input
             type="password"
             value={userData.password || ""}
-            onChange={(e) =>
-              setUserData({ ...userData, password: e.target.value })
-            }
+            onChange={(e) => setUserData({ ...userData, password: e.target.value })}
             placeholder="Leave blank to keep current password"
+            style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "1px solid #ccc" }}
           />
         </div>
-        <button type="submit">Update Profile</button>
+        <button type="submit" style={{ width: "100%", padding: "10px", borderRadius: "4px", border: "none", backgroundColor: "#16a085", color: "#fff", fontWeight: "bold" }}>Update Profile</button>
       </form>
-      {message && <p>{message}</p>}
+      {message && <p style={{ marginTop: "20px", color: message.includes("success") ? "green" : "red" }}>{message}</p>}
     </div>
   );
 };
