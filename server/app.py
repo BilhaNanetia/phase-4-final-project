@@ -5,12 +5,16 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 import requests
 from config import Config
+from flask_cors import CORS
+
 from models import db, User, Recipe, Comment
 
 blacklist = set() 
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+CORS(app)
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -157,7 +161,7 @@ def create_recipe():
         return jsonify({'error': str(e)}), 500
 
 # Get All Recipes
-@app.route('/recipes', methods=['GET'])
+@app.route('/local-recipes', methods=['GET'])
 def get_recipes():
     recipes = Recipe.query.all()
     output = []
@@ -175,7 +179,7 @@ def get_recipes():
     return jsonify(output), 200
 
 # Get Single Recipe
-@app.route('/recipes/<int:recipe_id>', methods=['GET'])
+@app.route('/local-recipes/<int:recipe_id>', methods=['GET'])
 def get_recipe(recipe_id):
     recipe = Recipe.query.get(recipe_id)
     if not recipe:

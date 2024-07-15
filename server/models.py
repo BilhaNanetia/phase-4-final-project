@@ -27,7 +27,7 @@ class User(db.Model, SerializerMixin):
 
 class Recipe(db.Model, SerializerMixin):
     __tablename__ = 'recipe'
-    serialize_rules = ('-user', '-comments')
+    serialize_rules = ('-user', '-comments', 'date_posted', 'user', 'image_url')
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)

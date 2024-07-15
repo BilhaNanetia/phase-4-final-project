@@ -49,6 +49,11 @@ const Navbar = ({ user, setUser }) => {
                   </NavLink>
                 </li>
                 <li className="nav__item">
+                  <NavLink to="/local-recipes" className="nav__link" activeClassName="nav__link--active">
+                    LocalRecipes
+                  </NavLink>
+                </li>
+                <li className="nav__item">
                   <NavLink to="#" className="nav__link" onClick={handleLogout}>
                     Logout
                   </NavLink>

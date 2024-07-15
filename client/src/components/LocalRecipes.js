@@ -21,52 +21,52 @@ const LocalRecipes = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold' }}>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div style={{ color: 'red', fontSize: '18px' }}>Error: {error}</div>;
   }
 
   return (
-    <div>
-      <h1>Local Recipe List</h1>
-      <ul>
+    <div style={{ maxWidth: '80rem', margin: '40px auto', padding: '20px', backgroundColor: '#ebcfec', borderRadius: '10px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+      <h1 style={{ fontSize: '36px', fontWeight: 'bold', marginBottom: '20px' }}>Local Recipe List</h1>
+      <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
         {recipes.map((recipe) => (
-          <li key={recipe.id}>
-            <h2>{recipe.title}</h2>
-            <p>{recipe.description}</p>
-            <p>Posted on: {recipe.date_posted ? recipe.date_posted.toLocaleString() : 'Unknown'}</p>
-            <p>Author: {recipe.user ? recipe.user.username : 'Unknown'}</p>
-            <h3>Ingredients:</h3>
-            <ul>
+          <li key={recipe.id} style={{ marginBottom: '20px', padding: '20px', borderBottom: '1px solid #ccc' }}>
+            <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '10px' }}>{recipe.title}</h2>
+            <p style={{ fontSize: '18px', marginBottom: '20px' }}>{recipe.description}</p>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>Ingredients:</h3>
+            <ul style={{ listStyle: 'none', padding: '0', margin: '0' }}>
               {Array.isArray(recipe.ingredients) ? (
                 recipe.ingredients.map((ingredient) => (
-                  <li key={ingredient}>{ingredient}</li>
+                  <li key={ingredient} style={{ marginBottom: '10px' }}>
+                    <span style={{ fontSize: '16px' }}>{ingredient}</span>
+                  </li>
                 ))
               ) : (
-                <li>{recipe.ingredients}</li>
+                <li style={{ marginBottom: '10px' }}>
+                  <span style={{ fontSize: '16px' }}>{recipe.ingredients}</span>
+                </li>
               )}
             </ul>
-            <h3>Instructions:</h3>
-            <ol>
+            <h3 style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '10px' }}>Instructions:</h3>
+            <ol style={{ listStyle: 'none', padding: '0', margin: '0' }}>
               {Array.isArray(recipe.instructions) ? (
                 recipe.instructions.map((instruction) => (
-                  <li key={instruction}>{instruction}</li>
+                  <li key={instruction} style={{ marginBottom: '10px' }}>
+                    <span style={{ fontSize: '16px' }}>{instruction}</span>
+                  </li>
                 ))
               ) : (
-                <li>{recipe.instructions}</li>
+                <li style={{ marginBottom: '10px' }}>
+                  <span style={{ fontSize: '16px' }}>{recipe.instructions}</span>
+                </li>
               )}
             </ol>
             {recipe.image_url && (
-              <img src={`http://localhost:5555/${recipe.image_url}`} alt={recipe.title} />
+              <img src={`http://localhost:5555/${recipe.image_url}`} alt={recipe.title} style={{ width: '100%', height: '200px', objectFit: 'cover', borderRadius: '10px', marginBottom: '20px' }} />
             )}
-            <h3>Comments:</h3>
-            <ul>
-              {recipe.comments?.map((comment) => (
-                <li key={comment.id}>{comment.text}</li>
-              ))}
-            </ul>
           </li>
         ))}
       </ul>
