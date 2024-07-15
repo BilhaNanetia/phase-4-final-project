@@ -37,6 +37,7 @@ class Recipe(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     ingredients = db.Column(db.Text, nullable=False)
     instructions = db.Column(db.Text, nullable=False)
+    image_url = db.Column(db.String(255), nullable=True)
     comments = db.relationship('Comment', backref='recipe', lazy=True)
 
 class Favorite(db.Model, SerializerMixin):
