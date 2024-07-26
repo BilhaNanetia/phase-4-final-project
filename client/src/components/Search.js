@@ -40,6 +40,7 @@ const Search = () => {
   };
 
   return (
+  
     <div>
       <h1>Search Recipes</h1>
       <form onSubmit={handleSearch}>
@@ -102,6 +103,7 @@ const Search = () => {
         )
       )}
     </div>
+  
   );
 };
 

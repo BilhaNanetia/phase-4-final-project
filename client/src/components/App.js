@@ -15,6 +15,7 @@ import Profile from "./Profile";
 import Logout from "./Logout";
 import LocalRecipes from "./LocalRecipes";
 
+
 const App = () => {
   const [user, setUser] = useState(null);
 
@@ -68,6 +69,7 @@ const App = () => {
         <Route path="/recipes" element={<RecipeList />} />
         <Route path="/create-recipe" element={<RecipeForm />} />
         <Route path="/local-recipes" element={<LocalRecipes />} />
+        
       </Routes>
     </>
   );

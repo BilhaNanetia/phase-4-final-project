@@ -53,6 +53,7 @@ const Navbar = ({ user, setUser }) => {
                     LocalRecipes
                   </NavLink>
                 </li>
+                
                 <li className="nav__item">
                   <NavLink to="#" className="nav__link" onClick={handleLogout}>
                     Logout
